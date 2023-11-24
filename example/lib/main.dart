@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 1,//3,
+      length: 2,//3,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Flutter Advanced Network Image Example'),
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             isScrollable: true,
             tabs: <Widget>[
               Tab(text: 'Load image'),
-              // Tab(text: 'Zoomable widget'),
+              Tab(text: 'Zoomable widget'),
               // Tab(text: 'Zoomable list'),
             ],
           ),
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             LoadImage(url: url, svgUrl: svgUrl),
-            // ZoomableImage(url: url),
+            ZoomableImage(url: url),
             // ZoomableImages(url: url),
           ],
         ),
