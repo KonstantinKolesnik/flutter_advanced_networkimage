@@ -1,8 +1,7 @@
 import 'dart:ui' show ImageFilter;
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter_advanced_networkimage_2/provider.dart';
 import 'package:flutter_advanced_networkimage_2/transition.dart';
@@ -16,40 +15,34 @@ void main() {
   ));
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
+  static const String url = 'https://openexpoeurope.com/wp-content/uploads/2019/12/flutter-logo-sharing.png';
+  static const String svgUrl = 'https://github.com/dart-lang/site-shared/raw/master/src/_assets/image/flutter/logo/default.svg';
+
   const MyApp({Key? key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => Example();
-}
-
-class Example extends State<MyApp> {
-  final String url = 'https://openexpoeurope.com/wp-content/uploads/2019/12/flutter-logo-sharing.png';
-  final String svgUrl =
-      'https://github.com/dart-lang/site-shared/raw/master/src/_assets/image/flutter/logo/default.svg';
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 1,//3,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Flutter Advanced Network Image Example'),
           bottom: const TabBar(
             isScrollable: true,
             tabs: <Widget>[
-              Tab(text: 'load image'),
-              Tab(text: 'zoomable widget'),
-              Tab(text: 'zoomable list'),
+              Tab(text: 'Load image'),
+              // Tab(text: 'Zoomable widget'),
+              // Tab(text: 'Zoomable list'),
             ],
           ),
         ),
-        body: TabBarView(
-          physics: const NeverScrollableScrollPhysics(),
+        body: const TabBarView(
+          physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             LoadImage(url: url, svgUrl: svgUrl),
-            ZoomableImage(url: url),
-            ZoomableImages(url: url),
+            // ZoomableImage(url: url),
+            // ZoomableImages(url: url),
           ],
         ),
       ),
@@ -77,6 +70,7 @@ class LoadImage extends StatelessWidget {
             // loadingProgress: (double progress, _) => print(progress),
             timeoutDuration: const Duration(seconds: 30),
             retryLimit: 1,
+            printError: true,
           ),
           // loadedCallback: () => print('It works!'),
           // loadFailedCallback: () => print('Oh, no!'),
@@ -109,20 +103,21 @@ class LoadImage extends StatelessWidget {
           },
         ),
         Expanded(
-          child: SvgPicture(
-            AdvancedNetworkSvg(
-              svgUrl, //svgByteDecoder
-              (theme) => (bytes, colorFilter, key) {
-                return svg.svgPictureDecoder(
-                  bytes ?? Uint8List.fromList(const []),
-                  false,
-                  colorFilter,
-                  key,
-                  theme: theme,
-                );
-              },
-            ),
-          ),
+          child: Container(),
+          // child: SvgPicture(
+          //   AdvancedNetworkSvg(
+          //     svgUrl, //svgByteDecoder
+          //     (theme) => (bytes, colorFilter, key) {
+          //       return svg.svgPictureDecoder(
+          //         bytes ?? Uint8List.fromList(const []),
+          //         false,
+          //         colorFilter,
+          //         key,
+          //         theme: theme,
+          //       );
+          //     },
+          //   ),
+          // ),
         ),
       ],
     );

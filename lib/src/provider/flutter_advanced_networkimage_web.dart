@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -129,7 +128,7 @@ class AdvancedNetworkImage extends ImageProvider<AdvancedNetworkImage> {
   }
 
   @override
-  ImageStreamCompleter load(AdvancedNetworkImage key, DecoderCallback decode) {
+  ImageStreamCompleter loadImage(AdvancedNetworkImage key, ImageDecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(key, decode)!.then((value) => value),
       scale: key.scale,
@@ -140,11 +139,10 @@ class AdvancedNetworkImage extends ImageProvider<AdvancedNetworkImage> {
     );
   }
 
-  Future<ui.Codec>? _loadAsync(
-      AdvancedNetworkImage key, DecoderCallback decode) {
+  Future<ui.Codec>? _loadAsync(AdvancedNetworkImage key, ImageDecoderCallback decode) {
     assert(key == this);
 
-    final Uri resolved = Uri.base.resolve(key.url);
+    final resolved = Uri.base.resolve(key.url);
 
     return ui.webOnlyInstantiateImageCodecFromUrl(// ignore: undefined_function
         resolved) as Future<ui.Codec>?;
@@ -160,8 +158,7 @@ class AdvancedNetworkImage extends ImageProvider<AdvancedNetworkImage> {
   }
 
   @override
-  int get hashCode => ui.hashValues(url, scale, useDiskCache, retryLimit,
-      retryDuration, retryDurationFactor, timeoutDuration);
+  int get hashCode => Object.hash(url, scale, useDiskCache, retryLimit, retryDuration, retryDurationFactor, timeoutDuration);
 
   @override
   String toString() => '$runtimeType('

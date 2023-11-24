@@ -311,34 +311,35 @@ Future<Uint8List?> loadFromRemote(
   bool printError = false,
   http.Client? client,
 }) async {
-  if (retryLimit < 0) retryLimit = 0;
+  if (retryLimit < 0)
+    retryLimit = 0;
   skipRetryStatusCode ??= [];
 
   /// Retry mechanism.
-  Future<http.Response?> run<T>(Future f(), int retryLimit,
-      Duration retryDuration, double retryDurationFactor) async {
+  Future<http.Response?> run(Future f(), int retryLimit, Duration retryDuration, double retryDurationFactor) async {
     for (int t in List.generate(retryLimit + 1, (int t) => t + 1)) {
       try {
         final http.Response? res = await (f() as FutureOr<http.Response>);
         if (res != null) {
-          if ([HttpStatus.ok, HttpStatus.partialContent]
-                  .contains(res.statusCode) &&
-              res.bodyBytes.length > 0) {
+          if ([HttpStatus.ok, HttpStatus.partialContent].contains(res.statusCode) && res.bodyBytes.length > 0) {
             return res;
           } else {
             if (printError)
-              debugPrint(
-                  'Failed to load, response status code: ${res.statusCode.toString()}.');
-            if (skipRetryStatusCode!.contains(res.statusCode)) return null;
+              debugPrint('Failed to load, response status code: ${res.statusCode.toString()}.');
+            if (skipRetryStatusCode!.contains(res.statusCode))
+              return null;
           }
         }
       } catch (e) {
-        if (printError) debugPrint(e.toString());
+        if (printError)
+          debugPrint(e.toString());
       }
       await Future.delayed(retryDuration * pow(retryDurationFactor, t - 1));
     }
 
-    if (retryLimit > 0 && printError) debugPrint('Retry failed!');
+    if (retryLimit > 0 && printError)
+      debugPrint('Retry failed!');
+
     return null;
   }
 
@@ -346,10 +347,10 @@ Future<Uint8List?> loadFromRemote(
   int bufferPosition = 0;
   bool acceptRangesHeader = false;
 
-  http.Response? _response;
-  _response = await run(() async {
+  final response = await run(() async {
     String _url = url;
-    if (getRealUrl != null) _url = (await getRealUrl()) ?? url;
+    if (getRealUrl != null)
+      _url = (await getRealUrl()) ?? url;
 
     if (loadingProgress != null) {
       client ??= http.Client();
@@ -359,9 +360,7 @@ Future<Uint8List?> loadFromRemote(
         _req.headers[HttpHeaders.rangeHeader] = 'bytes=$bufferPosition-';
 
       final _res = await client!.send(_req).timeout(timeoutDuration);
-      acceptRangesHeader =
-          _res.headers.containsKey(HttpHeaders.acceptRangesHeader) &&
-              _res.headers[HttpHeaders.acceptRangesHeader] == 'bytes';
+      acceptRangesHeader = _res.headers.containsKey(HttpHeaders.acceptRangesHeader) && _res.headers[HttpHeaders.acceptRangesHeader] == 'bytes';
 
       if (!acceptRangesHeader && buffer != null) {
         bufferPosition = 0;
@@ -406,9 +405,7 @@ Future<Uint8List?> loadFromRemote(
           if (buffer == null) {
             resultData = Uint8List(0);
           } else {
-            resultData = (buffer!.length == bufferPosition)
-                ? buffer
-                : Uint8List.view(buffer!.buffer, 0, bufferPosition);
+            resultData = (buffer!.length == bufferPosition) ? buffer : Uint8List.view(buffer!.buffer, 0, bufferPosition);
           }
 
           completer.complete(http.Response.bytes(
@@ -431,14 +428,11 @@ Future<Uint8List?> loadFromRemote(
 
       return completer.future;
     } else {
-      return await http
-          .get(Uri.tryParse(_url)!, headers: header)
-          .timeout(timeoutDuration);
+      return await http.get(Uri.tryParse(_url)!, headers: header).timeout(timeoutDuration);
     }
   }, retryLimit, retryDuration, retryDurationFactor);
-  if (_response != null) return _response.bodyBytes;
 
-  return null;
+  return response?.bodyBytes;
 }
 
 class DoubleTween extends Tween<double?> {
