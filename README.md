@@ -9,8 +9,8 @@ migrate to null safety
 [![Build Status](https://travis-ci.org/mchome/flutter_advanced_networkimage.svg?branch=master)](https://travis-ci.org/mchome/flutter_advanced_networkimage?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/mchome/flutter_advanced_networkimage/badge.svg?branch=master)](https://coveralls.io/github/mchome/flutter_advanced_networkimage?branch=master)-->
 
-An advanced image provider provides caching and retrying for flutter app.
-Now with zoomable widget and transition to image widget.
+An advanced image provider provides caching and retrying for Flutter app.
+Now with a zoomable widget and transition to an image widget.
 
 ## Getting Started
 
